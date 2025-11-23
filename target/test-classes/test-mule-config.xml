@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:circuit-breaker="http://www.mulesoft.org/schema/mule/circuit-breaker"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/circuit-breaker http://www.mulesoft.org/schema/mule/circuit-breaker/current/mule-circuit-breaker.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_Request_configuration1" doc:name="HTTP Request configuration" doc:id="21032717-ba6a-4b93-9a3a-0afa7191918c" >
+		<http:request-connection host="{yourtestapihost}" protocol="HTTPS"/>
+	</http:request-config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="ab8dec05-a3a4-4898-8578-27bb5cc91519" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="testingFlow" doc:id="94e6ad4c-3edd-4414-a017-6cad3481af8a" >
+		<http:listener doc:name="Listener" doc:id="8d4ac3cb-6acd-4515-98be-d33de45053c3" config-ref="HTTP_Listener_config" path="/api/"/>
+		<circuit-breaker:filter doc:name="Filter" doc:id="3820d7cc-071b-4f4d-ad12-e5a664da367c" failureThreshold="3" timeoutMinutes="1" includedErrors="HTTP:NOT_FOUND,HTTP:INTERNAL_SERVER_ERROR,HTTP:SERVICE_UNAVAILABLE">
+			<http:request method="GET" doc:name="Request" doc:id="f2f19c9f-87a3-4ef1-86d2-b1f8fb89982c" config-ref="HTTP_Request_configuration1" path="/posts"/>
+		</circuit-breaker:filter>
+	</flow>
+	<flow name="testingFlow1" doc:id="58f38add-f3ed-4b7d-99fe-5825e13816cc" >
+		<http:listener doc:name="Listener" doc:id="c58cac78-a0fa-4566-ae7a-a1c1cfb839e1" config-ref="HTTP_Listener_config" path="/api/sim500" />
+		<circuit-breaker:filter doc:name="Filter" doc:id="8edf2aa0-7938-4e3f-9399-c301546a134a" failureThreshold="3" timeoutMinutes="1" includedErrors="HTTP:NOT_FOUND,HTTP:INTERNAL_SERVER_ERROR,HTTP:SERVICE_UNAVAILABLE" circuitName="default-circuit-2">
+			<http:request method="GET" doc:name="Request" doc:id="3d40be25-6225-48c5-823f-aa9fdff4db75" config-ref="HTTP_Request_configuration1" path="/simulate-500" />
+		</circuit-breaker:filter>
+	</flow>
+
+</mule>

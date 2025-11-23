@@ -1,0 +1,25 @@
+{
+    "extensionModelLoaderDescriptor": {
+        "id": "java",
+        "attributes": {
+            "type": "org.mule.extension.circuitbreaker.internal.CircuitBreakerExtension",
+            "version": "1.0.0-SNAPSHOT"
+        }
+    },
+    "name": "Circuit Breaker",
+    "minMuleVersion": "4.6.0",
+    "requiredProduct": "MULE",
+    "classLoaderModelLoaderDescriptor": {
+        "id": "mule",
+        "attributes": {
+            "privilegedExportedPackages": [],
+            "privilegedArtifactIds": [],
+            "exportedPackages": [],
+            "exportedResources": []
+        }
+    },
+    "bundleDescriptorLoader": {
+        "id": "mule",
+        "attributes": {}
+    }
+}
